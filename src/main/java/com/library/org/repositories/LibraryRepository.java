@@ -2,14 +2,12 @@ package com.library.org.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-
-import reactor.core.publisher.Mono;
 
 import com.library.org.entities.BookEntity;
 
 public interface LibraryRepository extends JpaRepository<BookEntity, Long> {
+
   @Query("SELECT b FROM BookEntity b WHERE b.name = :name")
   BookEntity getBookByName(@Param("name") String name);
 

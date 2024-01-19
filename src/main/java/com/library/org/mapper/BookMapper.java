@@ -13,15 +13,16 @@ import com.library.org.entities.BookEntity;
 
 @Mapper
 public interface BookMapper {
+
   BookMapper MAPPER = Mappers.getMapper(BookMapper.class);
 
-  @Mapping(target= "id", source = "book.id")
+  @Mapping(target = "id", source = "book.id")
   @Mapping(target = "name", source = "book.name")
   @Mapping(target = "authors", expression = "java(toAuthors(book))")
   BookData mapBook(BookEntity book);
 
   @Named("toAuthors")
-  default Set<String> toAuthors(BookEntity book){
+  default Set<String> toAuthors(BookEntity book) {
     return book.getAuthors().stream().map(authorEntity -> authorEntity.getName()).collect(
         Collectors.toSet());
   }

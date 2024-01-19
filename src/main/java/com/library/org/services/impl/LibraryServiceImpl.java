@@ -1,28 +1,29 @@
 package com.library.org.services.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import com.library.org.data.AuthorData;
 import com.library.org.data.BookData;
 import com.library.org.entities.AuthorEntity;
 import com.library.org.entities.BookEntity;
+import com.library.org.mapper.AuthorMapper;
 import com.library.org.mapper.BookMapper;
 import com.library.org.repositories.AuthorRepository;
 import com.library.org.repositories.LibraryRepository;
 import com.library.org.requests.BookRequest;
 import com.library.org.services.LibraryService;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class LibraryServiceImpl implements LibraryService {
@@ -47,29 +48,25 @@ public class LibraryServiceImpl implements LibraryService {
     }).collect(Collectors.toSet());
     book.setAuthors(authorsWithBookInfo);
     authorRepository.saveAll(authorsWithBookInfo);
-    return Mono.just(BookMapper.MAPPER.mapBook(libraryRepository.save(book)));
+    return Mono.just(BookMapper.MAPPER.mapBook(libraryRepository.save(
+        book))); //Using ReactiveCrudRepo It will emit value wrapped in Mono/Flux.
   }
 
   @Override
-  public Flux<Iterable<BookData>> getBooks() {
-    return Flux.just(libraryRepository.findAll().stream().map( bookEntity -> {
-      return BookMapper.MAPPER.mapBook(bookEntity);
-    }).collect(Collectors.toList()));
+  public Mono<List<BookData>> getBooks() {
+    return Mono.just(libraryRepository.findAll().stream().map(BookMapper.MAPPER::mapBook)
+        .collect(Collectors.toList()));
   }
 
   @Override
-  public Mono<BookEntity> getBookById(String id) {
-    return Mono.just(libraryRepository.findById(Long.parseLong(id)).orElse(null));
+  public Mono<BookData> getBookById(String id) {
+    return Mono.just(BookMapper.MAPPER.mapBook(
+        libraryRepository.findById(Long.parseLong(id)).orElse(new BookEntity())));
   }
 
   @Override
   public Mono<AuthorData> getBooksByAuthorId(String authorId) {
-    return Mono.just(authorRepository.findById(Long.parseLong(authorId)).map( authorEntity -> {
-      AuthorData author = new AuthorData();
-      author.setName(authorEntity.getName());
-      //author.setBooks(authorEntity.getBooks());
-      return author;
-    }).orElse(null));
+    return Mono.just(AuthorMapper.MAPPER.mapAuthor(
+        authorRepository.findById(Long.parseLong(authorId)).orElse(new AuthorEntity())));
   }
-
 }
