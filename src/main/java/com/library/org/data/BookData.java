@@ -1,6 +1,5 @@
 package com.library.org.data;
 
-import java.util.List;
 import java.util.Set;
 
 public class BookData {

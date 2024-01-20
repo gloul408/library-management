@@ -2,6 +2,8 @@ package com.library.org.data;
 
 import java.util.List;
 
+import com.library.org.enums.Role;
+
 public class UserData {
 
   private Long id;
@@ -9,6 +11,15 @@ public class UserData {
   private String email;
   private String phone;
   private List<String> booksIssued;
+  private List<Role> roles;
+
+  public List<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
+  }
 
   public Long getId() {
     return id;
