@@ -19,7 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "library_user")
 public class UserEntity {
 
   @Id
