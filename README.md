@@ -1,6 +1,6 @@
 **LMS: Library Management Service**
 
-This spring webflux service is created for library management. This isa sample project for learning purpose.
+This spring webflux service is created for library management. This is a sample project for learning purpose.
 
 Key Points:
 1. This is developed in Spring webflux.
